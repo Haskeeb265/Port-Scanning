@@ -4,6 +4,7 @@ import ipaddress
 
 #Function to check if the input is a valid IP address or domain name
 def is_ip_address(target_input: str):
+    
     try:
         ip_obj = ipaddress.ip_address(target_input)
         return str(ip_obj)
@@ -14,23 +15,40 @@ def is_ip_address(target_input: str):
             return resolved_ip
         except socket.gaierror:
             return None
-        
 
-#Taking input from the user for target IP address or domain and port(s)
+
+def get_ports() -> list[int]:
+    
+    target_port_input = input("Enter target port(s). Use commans to separate multiple ports: ").strip()
+    port_list = []
+
+    for port_str in target_port_input.split(','):
+        port_str = port_str.strip()
+        if not port_str.isdigit():
+            print(f"Invalid port: {port_str}. Ports must be numeric.")
+            continue
+        port = int(port_str)
+        if 0<= port <=65535:
+            port_list.append(port)
+        else:
+            print(f"Invalid port: {port}. Ports must be between 0 and 65535.")
+            exit()
+
+    print(f"Valid ports: {port_list}")
+    return port_list        
+
+# Taking input from the user for target IP address or domain and port(s)
 
 if __name__ == "__main__":
 
     print("Enter target IP address or domain: ")
     target_input = input().strip() # strip removes leading and trailing whitespace
+    target_input = is_ip_address(target_input) # transforming domain into IP address if a domain is provided 
     
-    #Taking input from the user for target port(s) and converting them to a list of integers
-    print("Enter target port(s) use commas to seperate multiple ports: ") #Taking input from the user.
-    target_port_input = input().strip() # Converts target_port_input to a string and removes leading and trailing whitespace 
-    port_list = [int(port.strip()) for port in target_port_input.split(',') if port.strip().isdigit()] # Splitting the input string by commas and converting each part to an integer if it's a digit
-    
-    # Transforming domain into IP address if a domain is provided
-    is_ip_address(target_input) 
-    
+    print(f"Target IP address: {target_input}")
+    port_list = get_ports() # getting the list of ports from the user
+
+
 
 
 
