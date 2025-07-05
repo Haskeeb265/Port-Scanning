@@ -3,15 +3,15 @@ import ipaddress
 
 
 #Function to check if the input is a valid IP address or domain name
-def is_ip_address(target_input: str):
+def is_ip_address(ip_input: str):
     
     try:
-        ip_obj = ipaddress.ip_address(target_input)
+        ip_obj = ipaddress.ip_address(ip_input)
         return str(ip_obj)
     
     except ValueError:
         try:
-            resolved_ip = socket.gethostbyname(target_input)
+            resolved_ip = socket.gethostbyname(ip_input)
             return resolved_ip
         except socket.gaierror:
             return None
@@ -42,10 +42,10 @@ def get_ports() -> list[int]:
 if __name__ == "__main__":
 
     print("Enter target IP address or domain: ")
-    target_input = input().strip() # strip removes leading and trailing whitespace
-    target_input = is_ip_address(target_input) # transforming domain into IP address if a domain is provided 
+    ip_input = input().strip() # strip removes leading and trailing whitespace
+    ip_input = is_ip_address(ip_input) # transforming domain into IP address if a domain is provided 
     
-    print(f"Target IP address: {target_input}")
+    print(f"Target IP address: {ip_input}")
     port_list = get_ports() # getting the list of ports from the user
 
 
