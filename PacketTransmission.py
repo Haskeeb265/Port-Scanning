@@ -1,9 +1,16 @@
+import socket
 from PacketCrafting import s, packet_crafting
-from InputModule import ip_input, port_list
 
-def packet_transmission():
-    print("Transmitting packets...")
+def packet_transmission(ip_input: str, port_list: list[int]):
+    print("[+] Starting packet transmission...")
 
     for port in port_list:
-        pkt = packet_crafting(ip_input, port)  # Dynamically craft the packet for this port
-        s.sendto(pkt, (ip_input, 0))
+        packet = packet_crafting(ip_input, port)  # Craft packet for this specific port
+        try:
+            s.sendto(packet, (ip_input, 0))  # Send the crafted packet to the target IP (port is ignored for raw sockets)
+            print(f"[+] SYN packet sent to {ip_input}:{port}")
+        except PermissionError:
+            print("[!] Permission denied. Run your script as administrator/root.")
+            exit()
+        except Exception as e:
+            print(f"[!] Error sending packet to {ip_input}:{port} -> {e}")
